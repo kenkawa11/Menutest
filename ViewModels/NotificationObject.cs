@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Windows.Input;
 using System.Runtime.CompilerServices;
 
-namespace Menutest.ViewModels
+namespace Menutest.ViewModels.Notification
 {
 
     /// <summary>

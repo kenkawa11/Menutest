@@ -7,6 +7,9 @@
         xmlns:b="clr-namespace:Menutest.Views.Behaviors"
         mc:Ignorable="d"
         Title="AnkiPronoun" Height="450" Width="500" Icon="/icon.png">
+    <Window.Resources>
+        <ResourceDictionary Source="ResourceDic.xaml"/>
+    </Window.Resources>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File (_F)">
@@ -27,8 +30,8 @@
         <StatusBar DockPanel.Dock="Bottom">
         </StatusBar>
         <Grid Background="#FFDBEBEA">
-            <Button x:Name="doneBtn" Command="{Binding Readprocess}" IsEnabled="{Binding IsActiveDone}" Content="Done" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="100"  FontSize="16" FontFamily="Arial Black" RenderTransformOrigin="0.462,-1.489" Margin="70,165,0,0"/>
-            <Button Content="Cancel" Command="{Binding Cancel}" HorizontalAlignment="Left" Height="40" Margin="285,164,0,0" VerticalAlignment="Top" Width="100" FontSize="16" FontFamily="Arial Black"/>
+            <Button x:Name="doneBtn" Template="{StaticResource buttonTemplate}" Command="{Binding Done}" IsEnabled="{Binding IsActiveDone}" Content="Done" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="100"  FontSize="16" FontFamily="Arial Black" RenderTransformOrigin="0.462,-1.489" Margin="70,165,0,0"/>
+            <Button Content="Cancel" Template="{StaticResource buttonTemplate}" Command="{Binding Cancel}" HorizontalAlignment="Left" Height="40" Margin="285,164,0,0" VerticalAlignment="Top" Width="100" FontSize="16" FontFamily="Arial Black"/>
             <Label x:Name="label1" Content="{Binding Status}" HorizontalAlignment="Left" Height="35" Margin="111,272,0,0" VerticalAlignment="Top" Width="152" RenderTransformOrigin="0.781,1.001" FontFamily="Arial Black" FontSize="20"/>
             <Label x:Name="label2" Content="{Binding Progress}" HorizontalAlignment="Left" Height="34" Margin="353,228,0,0" VerticalAlignment="Top" Width="113" FontSize="20" FontFamily="Arial Black"/>
             <ProgressBar Value="{Binding BarProgress}" HorizontalAlignment="Left" Height="20" Margin="35,235,0,0" VerticalAlignment="Top" Width="300" Minimum="0" Maximum="100"/>
@@ -36,6 +39,7 @@
             <Label Content="Directory where media fiiles are saved" HorizontalAlignment="Left" Height="30" Margin="23,91,0,0" VerticalAlignment="Top" Width="369"  FontFamily="Arial Black" FontSize="16"/>
             <TextBox HorizontalAlignment="Left" Height="30" Margin="23,46,0,0" Text="{Binding Fn}" TextWrapping="Wrap" VerticalAlignment="Top" Width="450"/>
             <Label Content="Target file" HorizontalAlignment="Left" Height="30" Margin="23,16,0,0" VerticalAlignment="Top" Width="380" FontFamily="Arial Black" FontSize="16"/>
+            <Label Content="{Binding Rpt}" HorizontalAlignment="Left" Height="70" Margin="40,330,0,0" VerticalAlignment="Top" Width="445" FontFamily="Arial Black" FontSize="20"/>
         </Grid>
     </DockPanel>
 </Window>

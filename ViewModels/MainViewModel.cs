@@ -1,10 +1,12 @@
 ﻿using System;
 using PronunDLWPF;
-using System.Threading.Tasks;
 using System.Windows;
+using Menutest.ViewModels.Notification;
+using System.ComponentModel;
 
 namespace Menutest.ViewModels
 {
+
 
     public class MainViewModel: NotificationObject
     {
@@ -13,13 +15,21 @@ namespace Menutest.ViewModels
         private int barProgress;
         private string fn;
         private string dir;
-        private int isCont; // 1:キャンセル無し　0: キャンセル　ボタン　-1:Exitメニューからの場合
-        private Boolean isActiveDone;
+        private bool isActiveDone;
+        private string rpt;
+        private readonly PronounceDownloader DownLoder = new PronounceDownloader();
+
         public MainViewModel()
         {
             dir = @"C:\Users\naobaby\Desktop\test\";
-            isCont = 1;
             isActiveDone = true;
+            DownLoder.Ret.PropertyChanged += OnModelChanged;
+        }
+
+        public string Rpt
+        {
+            get { return this.rpt; }
+            set { SetProperty(ref this.rpt, value); }
         }
 
         public string Fn
@@ -53,12 +63,6 @@ namespace Menutest.ViewModels
         }
 
 
-        public int IsCont
-        {
-            get { return this.isCont; }
-            set { SetProperty(ref this.isCont, value); }
-        }
-
         public bool IsActiveDone
         {
             get { return this.isActiveDone; }
@@ -69,7 +73,7 @@ namespace Menutest.ViewModels
 
         private DelegateCommand _openFileCommand;
         private DelegateCommand _selectDirectory;
-        private DelegateCommand _readprocess;
+        private DelegateCommand _done;
         private DelegateCommand _cancel;
         private DelegateCommand _exitApplication;
 
@@ -77,10 +81,10 @@ namespace Menutest.ViewModels
         { 
             get 
             {
-                return this._exitApplication ?? (this._exitApplication = new DelegateCommand
+                return this._exitApplication ??= new DelegateCommand
                     (_ => { 
                         OnExit(); 
-                    }));
+                    });
             } 
         }
 
@@ -150,18 +154,19 @@ namespace Menutest.ViewModels
 
 
 
-        public DelegateCommand Readprocess
+        public DelegateCommand Done
         {
             get
             {
-                if (this._readprocess == null)
+                if (this._done == null)
                 {
-                    this._readprocess = new DelegateCommand(_ =>
+                    this._done= new DelegateCommand(_ =>
                     {
                         if (fn != null)
                         {
-                            this.IsActiveDone = false;
-                            Fntreat();
+                            Status = "Initialization";
+                            IsActiveDone = false;
+                            DownLoder.TreatData(fn, dir);
                         }
                         else
                         {
@@ -169,7 +174,7 @@ namespace Menutest.ViewModels
                         }
                     });
                 }
-                return this._readprocess;
+                return this._done;
             }
         }
 
@@ -182,7 +187,7 @@ namespace Menutest.ViewModels
                 {
                     this._cancel = new DelegateCommand(_ =>
                     {
-                        isCont = 0;
+                        DownLoder.Ret.Status = "Canceled";
                     });
                 }
                 return this._cancel;
@@ -192,50 +197,26 @@ namespace Menutest.ViewModels
 
 
 
-
-
-
-        private async void Fntreat()
+        private void OnModelChanged(object sender, PropertyChangedEventArgs e)
         {
-            this.Status = "Processing";
-            int num_treat;
-            var LoadFileData = new FileData(fn, dir);
-            var num_gross = LoadFileData.Count;
-
-            var t1 = LoadFileData.TreatData();
-
-            while (!t1.IsCompleted)
+            switch(e.PropertyName)
             {
-                if (isCont==0 | isCont==-1)
-                {
+                case "progress":
+                    BarProgress = DownLoder.Ret.Progress;
+                    Progress = $"{BarProgress}%";
                     break;
-                }
-                num_treat = LoadFileData.Progress;
-                BarProgress = num_treat * 100 / num_gross;
-                Progress = $"{BarProgress}%";
-                await Task.Delay(100);
-            }
-            Status = "Writing data in file";
-            LoadFileData.WriteData();
+                case "rpt":
+                    Rpt = DownLoder.Ret.Rpt;
+                    break;
+                case "status":
+                    Status = DownLoder.Ret.Status;
+                    if (Status == "Completed" || Status == "Canceled")
+                    {
+                        this.IsActiveDone = true;
+                    }
+                    break;
 
-            if (isCont == -1)
-            {
-                App.Current.Shutdown();
             }
-            else
-            {
-                if(isCont==0)
-                {
-                    Status = "Canceled";
-                }
-                else
-                {
-                    Status = "Complete";
-
-                }
-            }
-            this.isCont = 1;
-            this.IsActiveDone = true;
         }
     }
 }

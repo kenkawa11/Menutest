@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_1
 C:\Users\naobaby\source\repos\Menutest\App.xaml
-11811751144
+21415964412
 
 8-1679958500
 201-456337874
-Views\MainView.xaml;
+Views\MainView.xaml;Views\ResourceDic.xaml;
 
 False
 

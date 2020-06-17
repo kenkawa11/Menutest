@@ -74,10 +74,7 @@
                     var dir = dlg.FileName + @"\";
                     dircallback(true, dir);
                 }
-
-
             }
-
         }
     }
 

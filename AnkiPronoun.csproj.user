@@ -15,5 +15,8 @@
     <Page Update="Views\MainView.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Views\ResourceDic.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 </Project>

@@ -21,3 +21,4 @@ C:\Users\naobaby\source\repos\Menutest\obj\Debug\netcoreapp3.1\AnkiPronoun.cspro
 C:\Users\naobaby\source\repos\Menutest\obj\Debug\netcoreapp3.1\AnkiPronoun.dll
 C:\Users\naobaby\source\repos\Menutest\obj\Debug\netcoreapp3.1\AnkiPronoun.pdb
 C:\Users\naobaby\source\repos\Menutest\obj\Debug\netcoreapp3.1\AnkiPronoun.genruntimeconfig.cache
+C:\Users\naobaby\source\repos\Menutest\obj\Debug\netcoreapp3.1\Views\ResourceDic.baml

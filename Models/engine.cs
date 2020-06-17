@@ -1,23 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Linq;
+using Menutest.ViewModels.Notification;
+
 
 namespace PronunDLWPF
 {
-    public class FileData
+    public class ModelStatus: NotificationObject
     {
-        private readonly string rfn;
-        private readonly string dir;
-        public int Count { get; set; }
-        public int Progress { get; set; }
-        private readonly List<List<string>> fdata = new List<List<string>>();
-        public FileData(string a, string b)
+        private string status;
+        private int progress;
+        private string rpt;
+        public string Status
         {
-            rfn=a;
-            dir=b;
+            get { return this.status; }
+            set { SetProperty(ref this.status, value,"status"); }
+        }
+
+        public int Progress
+        {
+            get { return this.progress; }
+            set { SetProperty(ref this.progress, value,"progress"); }
+        }
+        public string Rpt
+        {
+            get { return this.rpt; }
+            set { SetProperty(ref this.rpt, value,"rpt"); }
+        }
+    }
+    public class PronounceDownloader
+    {
+        private string rfn;
+        private string dir;
+
+        public int DownloadNum { get; set; }
+        public int TargetNum { get; set; }
+
+        public int TargetSymbolNum { get; set; }
+        public int SymbolNum { get; set; }
+        public int Count { get;set; }
+
+
+        private readonly List<List<string>> fdata = new List<List<string>>();
+
+        public ModelStatus Ret = new ModelStatus();
+
+        public PronounceDownloader()
+        {
+
+        }
+
+
+        private void ReadData()
+        {
             string line;
             _ = new List<string>();
             using StreamReader sr = new StreamReader(rfn);
@@ -29,10 +66,9 @@ namespace PronunDLWPF
                 List<string> stringList = line.Split(',').ToList();
                 fdata.Add(stringList);
             }
-            Count = fdata.Count;
         }
 
-        public void WriteData()
+        private void WriteData()
         {
             string line = null;
             using StreamWriter file = new StreamWriter(rfn, false, Encoding.UTF8);
@@ -50,17 +86,64 @@ namespace PronunDLWPF
             }
         }
 
-        public async Task<bool> TreatData()
+
+
+        public async void  TreatData(string a, string b)
         {
-            Progress = 0;
+            Ret.Progress = 0;
+            Ret.Status = " ";
+            Ret.Rpt = " ";
+            rfn = a;
+            dir = b;
+            DownloadNum = 0;
+            TargetNum = 0;
+            TargetSymbolNum = 0;
+            SymbolNum = 0;
+            fdata.Clear();
+
+
+            ReadData();
+            Ret.Status = "Reading";
+            Count = fdata.Count;
+
+
+
+            Ret.Status = "Processing";
+            int treatNum = 0;
             foreach (var values in fdata)
             {
                 TreatMp3(values);
                 TreatSym(values);
-                Progress++;
+                treatNum++;
+                Ret.Progress = treatNum * 100 / Count;
+                if (Ret.Status=="Canceled")
+                {
+                    break;
+                }
                 await Task.Delay(1000);
             }
-            return true;
+
+            WriteData();
+
+            var mp3 = $"{DownloadNum} mp3 files in {TargetNum} were downloaded \n";
+            var sym = $"{SymbolNum} symbols in {TargetSymbolNum} were gotten"; 
+
+            if(DownloadNum<2)
+            {
+                mp3 = $"{DownloadNum} mp3 file in {TargetNum} was downloaded \n"; ;
+            }
+            if (SymbolNum<2)
+            {
+                sym = $"{SymbolNum} symbol in {TargetSymbolNum} was gotten";
+            }
+
+            Ret.Rpt = mp3 + sym;
+
+            if (Ret.Status!="Canceled")
+            {
+                Ret.Status = "Completed";
+            }
+
 
         }
         public void TreatMp3(List<string> line)
@@ -70,12 +153,14 @@ namespace PronunDLWPF
             line[0] = "TRKW-" + target_word;
             if (line[3] == "n")
             {
+                TargetNum++;
                 var outpath = dir + line[0];
                 foreach (var dic in Dict_all.allmp3)
                 {
                     if (dic.DownLoadMp3(target_word, outpath) != "0")
                     {
                         line[3] = "A";
+                        DownloadNum++;
                         return;
                     }
                 }
@@ -87,6 +172,7 @@ namespace PronunDLWPF
         {
             if (line[4] == "n")
             {
+                TargetSymbolNum++;
                 var target_word = line[2];
                 target_word = target_word.Trim().Replace(" ", "+");
                 target_word = "search?q=" + target_word;
@@ -99,6 +185,7 @@ namespace PronunDLWPF
                 else
                 {
                     line[4] = temp;
+                    SymbolNum++;
                 }
             }
             return;
