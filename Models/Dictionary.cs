@@ -3,19 +3,22 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.IO;
 using System.Collections.Generic;
+using AngleSharp;
+using AngleSharp.Html.Parser;
+using System.Linq;
 
 namespace PronunDLWPF
 {
     public static class Dict_all
     {
         private static readonly Ox oxford = new Ox();
-        private static readonly Ldo longman = new Ldo();
+        public static  Ldo longman = new Ldo();
         private static readonly Webl weblio = new Webl();
         public static Eiji eijiro = new Eiji();
 
         public static List<BaseDic> allmp3 = new List<BaseDic>
         {
-            oxford,longman,weblio
+            longman,oxford,weblio
         };
     }
 
@@ -36,8 +39,24 @@ namespace PronunDLWPF
             Get_mp3(url_mp3, outpath);
             return "1";
         }
+        public static async Task<string>GetHtml(string url)
+        {
+            try
+            {
+                client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
+                return await client.GetStringAsync(url).ConfigureAwait(false);
 
-        public static async Task<string> Get_body(string url, string ptn)
+                //return client.GetStringAsync(url);
+
+            }
+            catch (HttpRequestException)
+            {
+                return "0";
+
+            }
+        }
+
+        public static async Task<string> Get_body(string url, string ptn)//マッチパターンから直接mp3を取り出せう場合はこれで良い
         {
             try
             {
@@ -94,8 +113,44 @@ namespace PronunDLWPF
         public Ldo()
         {
             Url = "https://www.ldoceonline.com/jp/dictionary/";
+            //Ptn = "https://d27ucmmhxk51xv.cloudfront.net/media/english/exaProns/.+?mp3";
+
             Ptn = "https://.+/ameProns/.+?mp3";
         }
+
+        public Ldo(string ptn1)
+        {
+            Url = "https://www.ldoceonline.com/jp/dictionary/";
+            Ptn = ptn1;
+            //Ptn = "https://d27ucmmhxk51xv.cloudfront.net/media/english/exaProns/.+?mp3";
+        }
+
+        public string GetEaxampleSentence(string w)
+        {
+            var config = Configuration.Default;
+            var bodyUrl = Url + w;
+            var context = BrowsingContext.New(config);
+            var parser = context.GetService<IHtmlParser>();
+            var html = GetHtml(bodyUrl);
+            var doc = parser.ParseDocument(html.Result);
+            var elemnts = doc.GetElementsByClassName("EXAMPLE");
+
+
+
+            return "1";
+
+        }
+
+
+
+
+
+
+
+
+
+
+
     }
 
     public class Webl : BaseDic

@@ -43,6 +43,10 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
+            "AngleSharp": {
+              "target": "Package",
+              "version": "[0.14.0, )"
+            },
             "Microsoft-WindowsAPICodePack-Shell": {
               "target": "Package",
               "version": "[1.1.4, )"

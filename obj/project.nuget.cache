@@ -1,11 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "5HwA+6+09lS3zhMyrB0YMSw1wHi/MR/wbNopFcqmUJFHmcuh9IKu/ClnzkcJzzqCV62JmBQN1HVzyuGkI08cIw==",
+  "dgSpecHash": "ZjgyIwLnI3NKZmzYagEmEffOT/WL1oe8MU6UhsKXEpoz1E+VhFyhewkYjLndH9m9fr5yUYh5Z/tXu8hiA1fiFw==",
   "success": true,
   "projectFilePath": "C:\\Users\\naobaby\\source\\repos\\Menutest\\AnkiPronoun.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\naobaby\\.nuget\\packages\\anglesharp\\0.14.0\\anglesharp.0.14.0.nupkg.sha512",
     "C:\\Users\\naobaby\\.nuget\\packages\\microsoft-windowsapicodepack-core\\1.1.4\\microsoft-windowsapicodepack-core.1.1.4.nupkg.sha512",
-    "C:\\Users\\naobaby\\.nuget\\packages\\microsoft-windowsapicodepack-shell\\1.1.4\\microsoft-windowsapicodepack-shell.1.1.4.nupkg.sha512"
+    "C:\\Users\\naobaby\\.nuget\\packages\\microsoft-windowsapicodepack-shell\\1.1.4\\microsoft-windowsapicodepack-shell.1.1.4.nupkg.sha512",
+    "C:\\Users\\naobaby\\.nuget\\packages\\microsoft.netcore.platforms\\2.0.0\\microsoft.netcore.platforms.2.0.0.nupkg.sha512",
+    "C:\\Users\\naobaby\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.0\\system.runtime.compilerservices.unsafe.4.5.0.nupkg.sha512",
+    "C:\\Users\\naobaby\\.nuget\\packages\\system.text.encoding.codepages\\4.5.0\\system.text.encoding.codepages.4.5.0.nupkg.sha512"
   ],
   "logs": []
 }

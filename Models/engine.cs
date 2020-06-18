@@ -34,10 +34,8 @@ namespace PronunDLWPF
     {
         private string rfn;
         private string dir;
-
         public int DownloadNum { get; set; }
         public int TargetNum { get; set; }
-
         public int TargetSymbolNum { get; set; }
         public int SymbolNum { get; set; }
         public int Count { get;set; }
@@ -47,10 +45,7 @@ namespace PronunDLWPF
 
         public ModelStatus Ret = new ModelStatus();
 
-        public PronounceDownloader()
-        {
 
-        }
 
 
         private void ReadData()
@@ -88,8 +83,9 @@ namespace PronunDLWPF
 
 
 
-        public async void  TreatData(string a, string b)
+        public async void TreatData(string a, string b)
         {
+            //await Task.Delay(10);
             Ret.Progress = 0;
             Ret.Status = " ";
             Ret.Rpt = " ";
@@ -112,10 +108,12 @@ namespace PronunDLWPF
             int treatNum = 0;
             foreach (var values in fdata)
             {
+                /*TreatSentence(values);:*/
                 TreatMp3(values);
                 TreatSym(values);
                 treatNum++;
                 Ret.Progress = treatNum * 100 / Count;
+                Ret.Rpt = $"mp3:{DownloadNum}/{TargetNum},Symbol:{SymbolNum}/{TargetSymbolNum}";
                 if (Ret.Status=="Canceled")
                 {
                     break;
@@ -166,6 +164,13 @@ namespace PronunDLWPF
                 }
             }
             return;
+        }
+
+        public void TreatSentence(List<string> line)
+        {
+            var target_word = line[2];
+            target_word = target_word.Trim().Replace(" ", "+");
+            Dict_all.longman.GetEaxampleSentence(target_word);
         }
 
         public void TreatSym(List<string> line)

@@ -3,6 +3,7 @@ using PronunDLWPF;
 using System.Windows;
 using Menutest.ViewModels.Notification;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace Menutest.ViewModels
 {
@@ -166,7 +167,10 @@ namespace Menutest.ViewModels
                         {
                             Status = "Initialization";
                             IsActiveDone = false;
-                            DownLoder.TreatData(fn, dir);
+
+                            Task task = Task.Run(() => {
+                                DownLoder.TreatData(fn, dir);
+                            });
                         }
                         else
                         {
@@ -177,7 +181,6 @@ namespace Menutest.ViewModels
                 return this._done;
             }
         }
-
 
         public DelegateCommand Cancel
         {
